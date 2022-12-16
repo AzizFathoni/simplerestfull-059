@@ -27,11 +27,17 @@ public class ProductServiceController {
         Product honey = new Product();
         honey.setId("1");
         honey.setName("Honey");
+        honey.setPrice(7000);
+        honey.setNumber(7);
+        honey.setTotal();
         productRepo.put(honey.getId(), honey);
         
         Product almond = new Product();
         almond.setId("2");
         almond.setName("Almond");
+        almond.setPrice(8000);
+        almond.setNumber(5);
+        almond.setTotal();
         productRepo.put(almond.getId(), almond);
         
     }
@@ -47,7 +53,7 @@ public class ProductServiceController {
     public ResponseEntity<Object> createProduct(@RequestBody Product product){
         
         if(productRepo.containsKey(product.getId())){
-            return new ResponseEntity<>("ID Product Cannot be the Same, please check again", HttpStatus.OK);
+            return new ResponseEntity<>("ID Product" + product.getId().toString()+ "Cannot be the Same" + "please check again", HttpStatus.OK);
         }
         else{
             productRepo.put(product.getId(), product);
@@ -60,7 +66,7 @@ public class ProductServiceController {
     public ResponseEntity<Object> updateProduct(@PathVariable("id") String id, @RequestBody Product product){
         
         if(!productRepo.containsKey(id)){
-            return new ResponseEntity<>("Product Not Found, Please check again", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Product Not Found to update" + id + ",Please check again", HttpStatus.NOT_FOUND);
         }
         else{
             productRepo.remove(id);
@@ -74,8 +80,12 @@ public class ProductServiceController {
     // DELETE API
     @RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") String id){
-        productRepo.remove(id);
-        return new ResponseEntity<>("Product is deleted successfully", HttpStatus.OK);
+         if(!productRepo.containsKey(id)){
+            return new ResponseEntity<>("Product Not Found to deleted " + id +" ,Please check again", HttpStatus.NOT_FOUND);
+        }
+        else{
+            productRepo.remove(id);
+            return new ResponseEntity<>("Product is deleted successfully", HttpStatus.OK);
+        }
     }
-    
 }
